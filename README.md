@@ -4,7 +4,7 @@
 Enhances DRF AutoSchema and SchemaGenerator to help generating a better OpenApi 3 documentation.
 
 Supports servers, deprecated, tags and summary in schema generation, 
-now you can tag ApiViews and display the summary besides the description.
+now you can tag ApiViews, mark them as deprecated and display the summary besides the description.
 If you want your ApiView to display custom content in the documentation, 
 you can add it by writing comments to the view/view method in YAML format. 
 Fixed request body for views that handle multiple objects, 
