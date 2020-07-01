@@ -8,12 +8,12 @@ now you can tag ApiViews, mark them as deprecated and display the summary beside
 If you want your ApiView to display custom content in the documentation, 
 you can add it by writing comments to the view/view method in YAML format. 
 Fixed request body and responses for views that handle multiple objects, 
-such as bulk insert, bulk update and bulk delete. Now it's displayed as array.
+such as bulk insert, bulk update and bulk delete. Now they are displayed as array.
 
 ### Installation
 
 1. Install the package using `pip install drf_openapi3`
-2. Add `drf_openapi.apps.OpenApiConfig` to Django INSTALLED_APPS
+2. Add `drf_openapi.apps.OpenApiConfig` to Django `INSTALLED_APPS`
 
 ### Configuration
 
