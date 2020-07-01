@@ -21,7 +21,7 @@ such as bulk insert, bulk update and bulk delete. Now they are displayed as arra
 
 Extend `drf_openapi.views.OpenApiTemplateView`. You can define a title and template name, otherwise default values will be used.
 
-```
+```python
 from django.contrib.auth.mixins import LoginRequiredMixin
 from drf_openapi.views import OpenApiTemplateView
 
