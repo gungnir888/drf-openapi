@@ -33,7 +33,7 @@ class MyOpenApiTemplateView(LoginRequiredMixin, OpenApiTemplateView):
 
 2. Add schema to urlpatterns using `drf_openapi.SortedPathSchemaGenerator` as generator class
 
-```
+```python
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 from drf_openapi.schema_generator import SortedPathSchemaGenerator
@@ -63,7 +63,7 @@ urlpatterns = [
 
 Your views must extend `drf_openapi.views.AdvanceApiView`.
 
-```
+```python
 from drf_openapi.views import AdvanceApiView
 from rest_framework.generics import ListAPIView
 
@@ -84,7 +84,7 @@ Let's see step by step what you can do.
 Useful for instance if you provide a test sandbox together with a production server.
 In Django settings you can define url and description in `API_SERVERS`:
 
-```
+```python
 API_SERVERS = [
     {
         "url": "https://test.example.com/",
@@ -107,7 +107,7 @@ Keep in mind that defining multiple servers in `API_SERVERS` will allow users to
 If you want to tag your view, just add the attribute `tags` to it.
 You can decide your own, it can come in handy to add the endpoint version:
 
-```
+```python
 from drf_openapi.views import AdvanceApiView
 from rest_framework.generics import ListAPIView
 
@@ -126,7 +126,7 @@ class MyAPIListView(ListAPIView, AdvanceApiView):
 
 If you want to mark your view as deprecated, just add the attribute `deprecated = True` to it:
 
-```
+```python
 from drf_openapi.views import AdvanceApiView
 from rest_framework.generics import ListAPIView
 
@@ -150,7 +150,7 @@ both the `requestBody` and the `responses` field schema types are `object`, but 
 
 By adding `many = True` attribute to your view, you tell the schema that `requestBody` and `responses` must be arrays.
 
-```
+```python
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
 from rest.swagger_openapi import AdvanceApiView
@@ -183,7 +183,7 @@ Let's start with the simplest one, the same one that's already implemented from 
 
 we add a plain description in the view Docstring. If we do it on both view and method view, only method view Docstring will be taken into account:
 
-```
+```python
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
 from rest.swagger_openapi import AdvanceApiView
@@ -217,7 +217,7 @@ If you want to manage custom changes to your schema, just add them to the Docstr
 You'll notice that it'll be easier for you to read your code too.
 We're getting creative here, let's add a complete example:
 
-```
+```python
 class MyCommentedView(ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, AdvanceApiView):
     """
         get:
@@ -256,7 +256,7 @@ class MyCommentedView(ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView,
 If you've overridden the view methods already (`.get()`, `.post()`, `.put()`, `.delete()`) you can write there your comments.
 Please be advised that if you do so you must not use the notation `method: properties`:
 
-```
+```python
 # ...
 # ...
 
