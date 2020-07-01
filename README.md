@@ -98,7 +98,7 @@ API_SERVERS = [
 ```
 
 If you don't define anything, Django `BASE_URL` will be used to build your server block.
-So if you are developing in local environmente, the server `url` will be `http://localhost:8000`.
+So if you are developing in local environment, the server `url` will be `http://localhost:8000`.
 If it's production environment, the server `url` will be `https://example.com`.
 Keep in mind that defining multiple servers in `API_SERVERS` will allow users to switch server urls in the dropdown on the documentation before testing your endpoints.
 
