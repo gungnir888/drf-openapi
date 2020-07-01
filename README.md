@@ -213,7 +213,7 @@ class MyListPostView(ListCreateAPIView, AdvanceApiView):
         return Response(serialized.errors, status=HTTP_400_BAD_REQUEST)
 ```
 
-If you want to manage custom change to your schema, just add them to the Docstring in YAML format.
+If you want to manage custom changes to your schema, just add them to the Docstring in YAML format.
 You'll notice that it'll be easier for you to read your code too.
 We're getting creative here, let's add a complete example:
 
