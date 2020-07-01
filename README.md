@@ -124,7 +124,7 @@ class MyAPIListView(ListAPIView, AdvanceApiView):
 
 #### Apply deprecated to your old ApiView
 
-If you want mark your view as deprecated, just add the attribute `deprecated = True` to it:
+If you want to mark your view as deprecated, just add the attribute `deprecated = True` to it:
 
 ```
 from drf_openapi.views import AdvanceApiView
