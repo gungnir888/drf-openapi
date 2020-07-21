@@ -215,6 +215,8 @@ class MyListPostView(ListCreateAPIView, AdvanceApiView):
 
 If you want to manage custom changes to your schema, just add them to the Docstring in YAML format.
 You'll notice that it'll be easier for you to read your code too.
+If you want to limit the allowed response codes that you're going to see on the documentation, 
+just list the allowed status codes in your view (`allowed_status_codes`).
 We're getting creative here, let's add a complete example:
 
 ```python
@@ -245,6 +247,7 @@ class MyCommentedView(ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView,
                                 description: Deleted flag, here we define a different schema for bulk delete
     """
     allowed_methods = ("GET", "POST", "PUT", "DELETE")
+    allowed_status_codes = (200, 400, 401, 403)
 
     tags = ["v0"]
     many = True

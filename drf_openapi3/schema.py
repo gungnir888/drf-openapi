@@ -247,8 +247,16 @@ class AdvanceAutoSchema(AutoSchema):
         obj_num = 'one'
         if self.handles_many_objects:
             obj_num = 'many'
-        allowed_status_codes = METHOD_STATUS_CODES[method][obj_num]["status_codes"]
-        allowed_error_codes = METHOD_STATUS_CODES[method][obj_num]["error_codes"]
+        if getattr(self.view, 'allowed_status_codes', None):
+            allowed_status_codes = [
+                x for x in METHOD_STATUS_CODES[method][obj_num]["status_codes"] if x in self.view.allowed_status_codes
+            ]
+            allowed_error_codes = [
+                x for x in METHOD_STATUS_CODES[method][obj_num]["error_codes"] if x in self.view.allowed_status_codes
+            ]
+        else:
+            allowed_status_codes = METHOD_STATUS_CODES[method][obj_num]["status_codes"]
+            allowed_error_codes = METHOD_STATUS_CODES[method][obj_num]["error_codes"]
         for s in allowed_status_codes:
             allowed_responses[str(s)] = self._get_status_code_dict(
                 s, schema, STATUS_CODES_RESPONSES[s]['description']
