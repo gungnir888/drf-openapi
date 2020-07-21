@@ -1,4 +1,4 @@
 include LICENSE
 include README.rst
-recursive-include drf_openapi/static *
-recursive-include drf_openapi/templates *
+recursive-include drf_openapi3/static *
+recursive-include drf_openapi3/templates *

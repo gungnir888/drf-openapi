@@ -9,7 +9,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 setup(
     name='drf_openapi3',
     description='Manage OpenApi documentation with DRF',
-    version='0.1.0',
+    version='0.1.5',
     author='Davide Pugliese',
     author_email='davide.pglse@gmail.com',
     license='GPL',
@@ -17,7 +17,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     packages=find_packages(),
-    include_package_data = True,
+    include_package_data=True,
     python_requires='>3.6.0',
     install_requires=[
         'Django',
