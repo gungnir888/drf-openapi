@@ -104,6 +104,7 @@ class AdvanceAutoSchema(AutoSchema):
         if is_list_view(path, method, self.view):
             action += 'List'
             many = True
+            many = True
         elif self.handles_many_objects:
             action += f'List{method.title()}'
             many = True
@@ -227,10 +228,7 @@ class AdvanceAutoSchema(AutoSchema):
             if is_list_view(path, method, self.view):
                 paginator = self._get_paginator()
                 if paginator:
-                    response_schema = {
-                        **paginator.get_paginated_response_schema(response_schema),
-                        **response_schema
-                    }
+                    response_schema = paginator.get_paginated_response_schema(response_schema)
         else:
             response_schema = item_schema
         allowed_reponses = self._get_allowed_responses(method, response_schema)
