@@ -53,6 +53,7 @@ class SortedPathSchemaGenerator(SchemaGenerator):
                         "type": "apiKey",
                         "in": "header",
                         "name": "Authorization",
+                        "description": "Enter your bearer token in the format **Token &lt;token&gt;**",
                     }
                 }
             },
