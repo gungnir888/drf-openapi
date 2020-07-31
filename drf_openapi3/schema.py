@@ -1,6 +1,7 @@
 from typing import Optional, Dict
 
 import yaml
+from django.conf import settings
 from django.utils.encoding import smart_str
 from django.utils.html import strip_tags
 from rest_framework import serializers
@@ -231,6 +232,19 @@ class AdvanceAutoSchema(AutoSchema):
                     response_schema = paginator.get_paginated_response_schema(response_schema)
         else:
             response_schema = item_schema
+        if getattr(settings, 'STATIC_ERROR_CODES', False) is False:
+            return {
+                '200': {
+                    'content': {
+                        ct: {'schema': response_schema}
+                        for ct in self.response_media_types
+                    },
+                    # description is a mandatory property,
+                    # https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#responseObject
+                    # TODO: put something meaningful into it
+                    'description': ""
+                }
+            }
         allowed_reponses = self._get_allowed_responses(method, response_schema)
         return allowed_reponses
 
