@@ -28,10 +28,6 @@ class SortedPathSchemaGenerator(SchemaGenerator):
                     "schema generation. Server '{}' not valid".format(self.__class__.__name__, server)
                 )
                 servers.remove(server)
-        local_url = "{uri.scheme}://{uri.netloc}/".format(uri=urlparse(request.build_absolute_uri()))
-        url_already_set = bool(next((s for s in servers if s["url"] == local_url), None))
-        if not url_already_set:
-            servers = [*[{"url": local_url, "description": "Local server"}], *servers]
         return [
             {"url": s["url"], "description": s["description"]}
             for s in servers if "url" in s and "description" in s
