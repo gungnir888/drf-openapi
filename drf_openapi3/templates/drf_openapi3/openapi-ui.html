@@ -50,7 +50,7 @@
               SwaggerUIBundle.plugins.DownloadUrl
             ],
             layout: "StandaloneLayout",
-            validatorUrl: "https://validator.swagger.io/validator",
+            validatorUrl: null,
             url: schema_url,
             requestInterceptor: function (request) {
               request.headers['X-CSRFToken'] = csrfToken;
