@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class DRFOpenApiConfig(AppConfig):
+class DRFOpenApi3Config(AppConfig):
     name = 'drf_openapi3'

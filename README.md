@@ -13,17 +13,17 @@ such as bulk insert, bulk update and bulk delete. Now they are displayed as arra
 ### Installation
 
 1. Install the package using `pip install drf_openapi3`
-2. Add `drf_openapi.apps.OpenApiConfig` to Django `INSTALLED_APPS`
+2. Add `drf_openapi3.apps.OpenApi3Config` to Django `INSTALLED_APPS`
 
 ### Configuration
 
 1. OpenApi documentation View
 
-Extend `drf_openapi.views.OpenApiTemplateView`. You can define a title and template name, otherwise default values will be used.
+Extend `drf_openapi3.views.OpenApiTemplateView`. You can define a title and template name, otherwise default values will be used.
 
 ```python
 from django.contrib.auth.mixins import LoginRequiredMixin
-from drf_openapi.views import OpenApiTemplateView
+from drf_openapi3.views import OpenApiTemplateView
 
 
 class MyOpenApiTemplateView(LoginRequiredMixin, OpenApiTemplateView):
@@ -31,12 +31,12 @@ class MyOpenApiTemplateView(LoginRequiredMixin, OpenApiTemplateView):
     template_name = 'path/to/mytemplate.html'
 ```
 
-2. Add schema to urlpatterns using `drf_openapi.SortedPathSchemaGenerator` as generator class
+2. Add schema to urlpatterns using `drf_openapi3.SortedPathSchemaGenerator` as generator class
 
 ```python
 from django.contrib.auth.decorators import login_required
 from django.urls import path
-from drf_openapi.schema_generator import SortedPathSchemaGenerator
+from drf_openapi3.schema_generator import SortedPathSchemaGenerator
 from rest_framework.schemas import get_schema_view
 
 
@@ -61,10 +61,10 @@ urlpatterns = [
 
 3. Start documenting your ApiViews.
 
-Your views must extend `drf_openapi.views.AdvanceApiView`.
+Your views must extend `drf_openapi3.views.AdvanceApiView`.
 
 ```python
-from drf_openapi.views import AdvanceApiView
+from drf_openapi3.views import AdvanceApiView
 from rest_framework.generics import ListAPIView
 
 
@@ -108,7 +108,7 @@ If you want to tag your view, just add the attribute `tags` to it.
 You can decide your own, it can come in handy to add the endpoint version:
 
 ```python
-from drf_openapi.views import AdvanceApiView
+from drf_openapi3.views import AdvanceApiView
 from rest_framework.generics import ListAPIView
 
 
@@ -127,7 +127,7 @@ class MyAPIListView(ListAPIView, AdvanceApiView):
 If you want to mark your view as deprecated, just add the attribute `deprecated = True` to it:
 
 ```python
-from drf_openapi.views import AdvanceApiView
+from drf_openapi3.views import AdvanceApiView
 from rest_framework.generics import ListAPIView
 
 
@@ -153,7 +153,7 @@ By adding `many = True` attribute to your view, you tell the schema that `reques
 ```python
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
-from rest.swagger_openapi import AdvanceApiView
+from drf_openapi3 import AdvanceApiView
 
 
 class MyListPostView(ListCreateAPIView, AdvanceApiView):
@@ -186,7 +186,7 @@ we add a plain description in the view Docstring. If we do it on both view and m
 ```python
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
-from rest.swagger_openapi import AdvanceApiView
+from drf_openapi3 import AdvanceApiView
 
 
 class MyListPostView(ListCreateAPIView, AdvanceApiView):
