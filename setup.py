@@ -21,7 +21,8 @@ setup(
     python_requires='>3.6.0',
     install_requires=[
         'Django',
-        'djangorestframework'
+        'djangorestframework',
+        'yaml'
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
