@@ -22,7 +22,7 @@ setup(
     install_requires=[
         'Django',
         'djangorestframework',
-        'yaml'
+        'pyyaml'
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
