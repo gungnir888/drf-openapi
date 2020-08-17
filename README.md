@@ -215,8 +215,16 @@ class MyListPostView(ListCreateAPIView, AdvanceApiView):
 
 If you want to manage custom changes to your schema, just add them to the Docstring in YAML format.
 You'll notice that it'll be easier for you to read your code too.
+
+By default DRF AutoSchema displays only status code 200 as example response.
+Since 400, 401, 403, 404 status codes return a JSON `{"detail": <error detail>}`, 
+in Django settings you can define `STATIC_ERROR_CODES = True` to display more responses in your documentation.
+If you have to perform further changes on responses in your view, you can put them in YAML view/view method Docstring.
+
 If you want to limit the allowed response codes that you're going to see on the documentation, 
-just list the allowed status codes in your view (`allowed_status_codes`).
+just list the allowed status codes in your view (`allowed_status_codes`); this is useful when you had enabled 
+`STATIC_ERROR_CODES` and you want to prevent some responses to be displayed.
+
 We're getting creative here, let's add a complete example:
 
 ```python
