@@ -291,3 +291,11 @@ Please be advised that if you do so you must not use the notation `method: prope
         # ...
         return Response(output, status=HTTP_200_OK)
 ```
+
+#### Minor notes
+
+The package fixes the type mappings on some serializer fields that are not rendered correctly:
+
+* ChoiceField, now the correct type is inspected and the first choice is displayed as example in request body / response
+* SerializerMethodField, here the type is guessed on the return type of the function assigned to the parameter `method_name`.
+Please refer to [typing](https://docs.python.org/3/library/typing.html) to get a better grasp of type hints.

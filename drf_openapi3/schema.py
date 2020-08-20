@@ -143,14 +143,16 @@ class AdvanceAutoSchema(AutoSchema):
         :return: Field map
         """
         field_map = super()._map_field(field)
+        types_map = {
+            'str': 'string',
+            'bool': 'boolean',
+            'int': 'integer',
+            'float': 'number',
+            'list': 'array',
+            'dict': 'object',
+        }
 
         if isinstance(field, serializers.ChoiceField):
-            types_map = {
-                'str': 'string',
-                'bool': 'boolean',
-                'int': 'integer',
-                'float': 'number',
-            }
             types = {types_map[type(x).__name__] for x in field.choices if type(x).__name__ in types_map}
             if len(types) == 1:
                 t = {"type": next(iter(types), "string")}
@@ -158,6 +160,16 @@ class AdvanceAutoSchema(AutoSchema):
                 t = {"anyOf": [{"type": t} for t in types]}
             t['enum'] = list(field.choices)
             return t
+
+        if isinstance(field, serializers.SerializerMethodField):
+            method = getattr(field.parent, field.method_name)
+            return {
+                'type': types_map.get(
+                    getattr(method.__annotations__.get('return'), '__name__', 'str'),
+                    'string'
+                )
+            }
+
         return field_map
 
     def _get_request_body(self, path: str, method: str) -> dict:
