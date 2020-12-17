@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
-from ..schema import AdvanceAutoSchema
+from drf_openapi3.schemas.advanced import AdvancedAutoSchema
 
 
 class AdvanceApiView(APIView):
-    schema = AdvanceAutoSchema()
+    schema = AdvancedAutoSchema()
