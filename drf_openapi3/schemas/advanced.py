@@ -1,4 +1,8 @@
+import warnings
+from typing import Dict
+
 import yaml
+from django.conf import settings
 from django.utils.encoding import smart_str
 from django.utils.html import strip_tags
 from rest_framework import serializers
@@ -6,9 +10,53 @@ from rest_framework.settings import api_settings
 from rest_framework.utils import formatting
 from yaml.scanner import ScannerError
 
-from drf_openapi3.schemas.openapi import AutoSchema
+from drf_openapi3.schemas.openapi import AutoSchema, SchemaGenerator
 from drf_openapi3.schemas.utils import is_list_view
-from drf_openapi3.settings import STATUS_CODES_RESPONSES, DEFAULT_ERROR_SCHEMA
+from drf_openapi3.settings import STATUS_CODES_RESPONSES, DEFAULT_ERROR_SCHEMA, METHOD_STATUS_CODES
+
+
+class AdvancedSchemaGenerator(SchemaGenerator):
+
+    def get_servers(self, request=None):
+        """
+        Get local server together with servers
+        defined in "API_SERVERS" Django settings config
+        """
+        servers = getattr(settings, "API_SERVERS", [])
+        if not request and not servers:
+            warnings.warn(
+                "{}.get_servers() raised an exception during "
+                "schema generation. Please add 'API_SERVER' "
+                "configuration in Django settings.".format(self.__class__.__name__)
+            )
+            return None
+        for server in servers:
+            if not isinstance(server, dict):
+                warnings.warn(
+                    "{}.get_servers() raised an exception during "
+                    "schema generation. Server '{}' not valid".format(self.__class__.__name__, server)
+                )
+                servers.remove(server)
+        return [
+            {"url": s["url"], "description": s["description"]}
+            for s in servers if "url" in s and "description" in s
+        ]
+
+    def get_schema(self, request=None, public=False):
+        schema = super(AdvancedSchemaGenerator, self).get_schema(
+            request=request, public=public
+        )
+        schema["components"]["securitySchemes"] = {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "description": "Enter your bearer token in the format **Token &lt;token&gt;**",
+            }
+        }
+        schema["security"] = [{"ApiKeyAuth": []}]
+        schema["servers"] = self.get_servers(request=request)
+        return schema
 
 
 class AdvancedAutoSchema(AutoSchema):
