@@ -12,6 +12,7 @@ from django.core.validators import (
 from django.db import models
 from django.utils.encoding import force_str
 
+from drf_openapi3.settings import RemovedInDRF313Warning, RemovedInDRF314Warning
 from rest_framework import (
     RemovedInDRF314Warning, exceptions, renderers, serializers
 )
