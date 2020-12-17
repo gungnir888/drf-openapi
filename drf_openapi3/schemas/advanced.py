@@ -12,7 +12,11 @@ from yaml.scanner import ScannerError
 
 from drf_openapi3.schemas.openapi import AutoSchema, SchemaGenerator
 from drf_openapi3.schemas.utils import is_list_view
-from drf_openapi3.settings import STATUS_CODES_RESPONSES, DEFAULT_ERROR_SCHEMA, METHOD_STATUS_CODES
+from drf_openapi3.settings import (
+    STATUS_CODES_RESPONSES,
+    DEFAULT_ERROR_SCHEMA,
+    METHOD_STATUS_CODES
+)
 
 
 class AdvancedSchemaGenerator(SchemaGenerator):
