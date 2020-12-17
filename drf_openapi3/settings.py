@@ -90,3 +90,11 @@ STATUS_CODES_RESPONSES = {
         'description': 'Empty Content'
     }
 }
+
+
+class RemovedInDRF313Warning(DeprecationWarning):
+    pass
+
+
+class RemovedInDRF314Warning(PendingDeprecationWarning):
+    pass
