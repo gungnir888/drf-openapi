@@ -3,8 +3,8 @@
 
 Enhances DRF AutoSchema and SchemaGenerator to help generating a better OpenApi 3 documentation.
 
-Supports servers, deprecated, tags and summary in schema generation, 
-now you can tag ApiViews, mark them as deprecated and display the summary besides the description.
+Supports servers, deprecated and summary in schema generation, 
+now you mark them as deprecated and display the summary besides the description.
 If you want your ApiView to display custom content in the documentation, 
 you can add it by writing comments to the view/view method in YAML format. 
 Fixed request body and responses for views that handle multiple objects, 
@@ -31,12 +31,12 @@ class MyOpenApiTemplateView(LoginRequiredMixin, OpenApiTemplateView):
     template_name = 'path/to/mytemplate.html'
 ```
 
-2. Add schema to urlpatterns using `drf_openapi3.SortedPathSchemaGenerator` as generator class
+2. Add schema to urlpatterns using `drf_openapi3.AdvancedSchemaGenerator` as generator class
 
 ```python
 from django.contrib.auth.decorators import login_required
 from django.urls import path
-from drf_openapi3.schema_generator import SortedPathSchemaGenerator
+from drf_openapi3.schemas.advanced import AdvancedSchemaGenerator
 from rest_framework.schemas import get_schema_view
 
 
@@ -49,7 +49,7 @@ urlpatterns = [
             title='My API',
             description='My API description',
             version='1.0.0',
-            generator_class=SortedPathSchemaGenerator,
+            generator_class=AdvancedSchemaGenerator,
             public=True,
         ),
         login_url='/accounts/login/',
@@ -59,16 +59,13 @@ urlpatterns = [
 ]
 ```
 
-3. Start documenting your ApiViews.
-
-Your views must extend `drf_openapi3.views.AdvanceApiView`.
+3. Start writing your ApiViews.
 
 ```python
-from drf_openapi3.views import AdvanceApiView
 from rest_framework.generics import ListAPIView
 
 
-class MyAPIListView(ListAPIView, AdvanceApiView):
+class MyAPIListView(ListAPIView):
     allowed_methods = ['get']
 
     def get(self, request, *args, **kwargs):
@@ -104,19 +101,24 @@ Keep in mind that defining multiple servers in `API_SERVERS` will allow users to
 
 #### Apply tags to your ApiView
 
-If you want to tag your view, just add the attribute `tags` to it.
+If you want to tag your view, just pass `tags` to your view schema. Default is "api".
 You can decide your own, it can come in handy to add the endpoint version:
 
 ```python
-from drf_openapi3.views import AdvanceApiView
+from drf_openapi3.schemas.advanced import AdvancedAutoSchema
 from rest_framework.generics import ListAPIView
 
 
-class MyAPIListView(ListAPIView, AdvanceApiView):
+class MyAPIListView(ListAPIView):
     # ...
     # ...
     allowed_methods = ['get']
-    tags = ["v2"]
+    schema = AdvancedAutoSchema(
+        tags=["v0"],
+        component_name="My",
+        operation_id_base="MyAPI",
+        handles_many_objects=True
+    )
 
     def get(self, request, *args, **kwargs):
         return super(MyAPIListView, self).list(request, *args, **kwargs)
@@ -124,19 +126,24 @@ class MyAPIListView(ListAPIView, AdvanceApiView):
 
 #### Apply deprecated to your old ApiView
 
-If you want to mark your view as deprecated, just add the attribute `deprecated = True` to it:
+If you want to mark your view as deprecated, just add the attribute `deprecated = True` to your view schema:
 
 ```python
-from drf_openapi3.views import AdvanceApiView
+from drf_openapi3.schemas.advanced import AdvancedAutoSchema
 from rest_framework.generics import ListAPIView
 
 
-class MyAPIListView(ListAPIView, AdvanceApiView):
+class MyAPIListView(ListAPIView):
     # ...
     # ...
     allowed_methods = ['get']
-    tags = ["v0"]
-    deprecated = True
+    schema = AdvancedAutoSchema(
+        tags=["v0"],
+        component_name="My",
+        operation_id_base="MyAPI",
+        handles_many_objects=True,
+        deprecated=True
+    )
 
     def get(self, request, *args, **kwargs):
         return super(MyAPIListView, self).list(request, *args, **kwargs)
@@ -146,21 +153,28 @@ class MyAPIListView(ListAPIView, AdvanceApiView):
 
 When you write a view that performs bulk create, update or delete operations you face some issues on the documentation:
 
-both the `requestBody` and the `responses` field schema types are `object`, but they should be `array`.
+the `responses` field schema types are `object`, but they should be `array`.
 
-By adding `many = True` attribute to your view, you tell the schema that `requestBody` and `responses` must be arrays.
+By adding `handles_many_objects=True` attribute to your view schema, you tell the schema that `responses` must be array.
 
 ```python
+from drf_openapi3.schemas.advanced import AdvancedAutoSchema
 from rest_framework.generics import ListCreateAPIView
+from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
-from drf_openapi3 import AdvanceApiView
 
 
-class MyListPostView(ListCreateAPIView, AdvanceApiView):
+
+class MyListPostView(ListCreateAPIView):
     # ...
     # ...
     allowed_methods = ['get', 'post']
-    many = True
+    schema = AdvancedAutoSchema(
+        tags=["v0"],
+        component_name="My",
+        operation_id_base="MyAPI",
+        handles_many_objects=True,
+    )
 
     def post(self, request, *args, **kwargs) -> Response:
         serialized = self.get_serializer(data=request.data, many=True)
@@ -184,12 +198,13 @@ Let's start with the simplest one, the same one that's already implemented from 
 we add a plain description in the view Docstring. If we do it on both view and method view, only method view Docstring will be taken into account:
 
 ```python
+from drf_openapi3.schemas.advanced import AdvancedAutoSchema
 from rest_framework.generics import ListCreateAPIView
+from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
-from drf_openapi3 import AdvanceApiView
 
 
-class MyListPostView(ListCreateAPIView, AdvanceApiView):
+class MyListPostView(ListCreateAPIView):
     """
     This is my endpoint description and it will be reported 
     for each allowed method.
@@ -197,7 +212,12 @@ class MyListPostView(ListCreateAPIView, AdvanceApiView):
     # ...
     # ...
     allowed_methods = ['get', 'post']
-    many = True
+    schema = AdvancedAutoSchema(
+        tags=["v0"],
+        component_name="My",
+        operation_id_base="MyListPost",
+        handles_many_objects=True,
+    )   
 
     def post(self, request, *args, **kwargs) -> Response:
         """
@@ -228,7 +248,11 @@ just list the allowed status codes in your view (`allowed_status_codes`); this i
 We're getting creative here, let's add a complete example:
 
 ```python
-class MyCommentedView(ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, AdvanceApiView):
+from drf_openapi3.schemas.advanced import AdvancedAutoSchema
+from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+
+
+class MyCommentedView(ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView):
     """
         get:
             summary: Summary for get method
@@ -257,8 +281,12 @@ class MyCommentedView(ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView,
     allowed_methods = ("GET", "POST", "PUT", "DELETE")
     allowed_status_codes = (200, 400, 401, 403)
 
-    tags = ["v0"]
-    many = True
+    schema = AdvancedAutoSchema(
+        tags=["v0"],
+        component_name="MyCommented",
+        operation_id_base="MyCommentedWriteDelete",
+        handles_many_objects=True,
+    )
 
 # ...
 # ...
@@ -268,8 +296,12 @@ If you've overridden the view methods already (`.get()`, `.post()`, `.put()`, `.
 Please be advised that if you do so you must not use the notation `method: properties`:
 
 ```python
-# ...
-# ...
+from rest_framework.generics import ListAPIView, DestroyAPIView
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK
+
+
+class MyCommentedView(ListAPIView, DestroyAPIView):
 
     def delete(self, request, *args, **kwargs) -> Response:
         """
@@ -287,15 +319,8 @@ Please be advised that if you do so you must not use the notation `method: prope
         """
         output = []
         for data in request.data:
-        # ...
-        # ...
+            # ...
+            # ...
+            pass
         return Response(output, status=HTTP_200_OK)
 ```
-
-#### Minor notes
-
-The package fixes the type mappings on some serializer fields that are not rendered correctly:
-
-* ChoiceField, now the correct type is inspected and the first choice is displayed as example in request body / response
-* SerializerMethodField, here the type is guessed on the return type of the function assigned to the parameter `method_name`.
-Please refer to [typing](https://docs.python.org/3/library/typing.html) to get a better grasp of type hints.
