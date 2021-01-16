@@ -324,3 +324,42 @@ class MyCommentedView(ListAPIView, DestroyAPIView):
             pass
         return Response(output, status=HTTP_200_OK)
 ```
+
+Last but not least: do you want to set a default sort for your endpoints?
+Just pass `index=n` to `AdvancedAutoSchema`: 
+
+```python
+from drf_openapi3.schemas.advanced import AdvancedAutoSchema
+from rest_framework.generics import ListAPIView, ListCreateAPIView
+
+
+class MyAPIListView(ListAPIView):
+    # ...
+    # ...
+    allowed_methods = ['get']
+    schema = AdvancedAutoSchema(
+        index=0,
+        tags=["v0"],
+        component_name="My",
+        operation_id_base="MyAPI",
+        handles_many_objects=True,
+        deprecated=True
+    )
+
+
+class MyListPostView(ListCreateAPIView):
+    """
+    This is my endpoint description and it will be reported 
+    for each allowed method.
+    """
+    # ...
+    # ...
+    allowed_methods = ['get', 'post']
+    schema = AdvancedAutoSchema(
+        index=1,
+        tags=["v0"],
+        component_name="My",
+        operation_id_base="MyListPost",
+        handles_many_objects=True,
+    )   
+```
