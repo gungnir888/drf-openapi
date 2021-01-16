@@ -42,7 +42,9 @@ def endpoint_ordering(endpoint):
         'PATCH': 3,
         'DELETE': 4
     }.get(method, 5)
-    return (method_priority,)
+    index = callback.view_class.schema.index
+    tag = callback.view_class.schema.get_tags(path, method)[0]
+    return (tag, index, method_priority, path)
 
 
 _PATH_PARAMETER_COMPONENT_RE = re.compile(
