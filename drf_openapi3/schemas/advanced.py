@@ -65,12 +65,13 @@ class AdvancedSchemaGenerator(SchemaGenerator):
 
 class AdvancedAutoSchema(AutoSchema):
 
-    def __init__(self, tags=None, operation_id_base=None, component_name=None,
+    def __init__(self, index=9999, tags=None, operation_id_base=None, component_name=None,
                  handles_many_objects=False, deprecated=False):
         super(AdvancedAutoSchema, self).__init__(
             tags=tags, operation_id_base=operation_id_base,
             component_name=component_name
         )
+        self.index = index
         self.handles_many_objects = handles_many_objects
         self.deprecated = deprecated
 
