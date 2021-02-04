@@ -42,9 +42,20 @@ def endpoint_ordering(endpoint):
         'PATCH': 3,
         'DELETE': 4
     }.get(method, 5)
-    index = callback.view_class.schema.index
-    tag = callback.view_class.schema.get_tags(path, method)[0]
+    if hasattr(callback.view_class.schema, 'index'):
+        index = callback.view_class.schema.index
+    else:
+        index = 9999
+    if hasattr(callback.view_class.schema, 'get_tags'):
+        tag = callback.view_class.schema.get_tags(path, method)[0]
+    else:
+        tag = 'api'
     return (tag, index, method_priority, path)
+
+
+_PATH_PARAMETER_COMPONENT_RE = re.compile(
+    r'<(?:(?P<converter>[^>:]+):)?(?P<parameter>\w+)>'
+)
 
 
 _PATH_PARAMETER_COMPONENT_RE = re.compile(
