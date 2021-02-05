@@ -48,7 +48,7 @@ METHOD_STATUS_CODES = {
     'DELETE': {
         'one': {
             'status_codes': [204],
-            'error_codes': [400, 401, 403],
+            'error_codes': [400, 401, 403, 406],
         },
         'many': {
             'status_codes': [200],
@@ -69,7 +69,8 @@ STATUS_CODES_RESPONSES = {
         'description': 'Update Accepted'
     },
     204: {
-        'description': 'Empty Content'
+        'description': 'Empty Content',
+        'content': False
     },
     400: {
         'description': 'Invalid Content'
@@ -81,13 +82,17 @@ STATUS_CODES_RESPONSES = {
         'description': 'Forbidden'
     },
     404: {
-        'description': 'Empty Content'
+        'description': 'Not Found'
+    },
+    406: {
+        'description': 'Not Acceptable',
+        'content': False
     },
     500: {
-        'description': 'Empty Content'
+        'description': 'Internal Server Error'
     },
     502: {
-        'description': 'Empty Content'
+        'description': 'Bad Gateway'
     }
 }
 
