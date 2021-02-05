@@ -127,7 +127,7 @@ class AdvancedAutoSchema(AutoSchema):
                 if s["value"].get("description") \
                 else STATUS_CODES_RESPONSES[s]['description']
             schema = s["value"]["schema"] if s["value"].get("schema") else DEFAULT_ERROR_SCHEMA
-            operation["responses"][str(s["key"])] = self._get_status_code_dict(
+            operation["responses"][s["key"]] = self._get_status_code_dict(
                 s["key"], schema,
                 description
             )[s["key"]]
@@ -262,7 +262,7 @@ class AdvancedAutoSchema(AutoSchema):
             response_schema = item_schema
         if getattr(settings, 'STATIC_ERROR_CODES', False) is False:
             return {
-                '200': {
+                200: {
                     'content': {
                         ct: {'schema': response_schema}
                         for ct in self.response_media_types
@@ -270,7 +270,7 @@ class AdvancedAutoSchema(AutoSchema):
                     # description is a mandatory property,
                     # https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#responseObject
                     # TODO: put something meaningful into it
-                    'description': ""
+                    'description': ''
                 }
             }
         allowed_reponses = self._get_allowed_responses(method, response_schema)
@@ -298,13 +298,17 @@ class AdvancedAutoSchema(AutoSchema):
             allowed_status_codes = METHOD_STATUS_CODES[method][obj_num]["status_codes"]
             allowed_error_codes = METHOD_STATUS_CODES[method][obj_num]["error_codes"]
         for s in allowed_status_codes:
-            allowed_responses[str(s)] = self._get_status_code_dict(
+            allowed_responses[s] = self._get_status_code_dict(
                 s, schema, STATUS_CODES_RESPONSES[s]['description']
             )[s]
+            if STATUS_CODES_RESPONSES[s].get('content', True) is False:
+                allowed_responses[s].pop('content', None)
         for s in allowed_error_codes:
-            allowed_responses[str(s)] = self._get_status_code_dict(
+            allowed_responses[s] = self._get_status_code_dict(
                 s, DEFAULT_ERROR_SCHEMA, STATUS_CODES_RESPONSES[s]['description']
             )[s]
+            if STATUS_CODES_RESPONSES[s].get('content', True) is False:
+                allowed_responses[s].pop('content', None)
         return allowed_responses
 
     def _get_media_types_content(self, schema: dict) -> dict:
