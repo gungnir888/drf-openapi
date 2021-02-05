@@ -46,16 +46,7 @@ def endpoint_ordering(endpoint):
         index = callback.view_class.schema.index
     else:
         index = 9999
-    if hasattr(callback.view_class.schema, 'get_tags'):
-        tag = callback.view_class.schema.get_tags(path, method)[0]
-    else:
-        tag = 'api'
-    return (tag, index, method_priority, path)
-
-
-_PATH_PARAMETER_COMPONENT_RE = re.compile(
-    r'<(?:(?P<converter>[^>:]+):)?(?P<parameter>\w+)>'
-)
+    return index, method_priority, path
 
 
 _PATH_PARAMETER_COMPONENT_RE = re.compile(
